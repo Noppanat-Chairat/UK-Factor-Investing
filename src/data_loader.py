@@ -40,15 +40,21 @@ def download_uk_data(tickers, start_date, end_date):
         return None
 
 if __name__ == "__main__":
-    # ใช้หุ้นเพียง 3 ตัวก่อนเพื่อความเร็วในการทดสอบ
-    tickers = ["AZN.L", "HSBA.L", "SHEL.L"]
+    # รายชื่อหุ้นที่คัดมาแล้วว่ามีข้อมูลแน่นอน
+    tickers = [
+        "AZN.L", "HSBA.L", "SHEL.L", "ULVR.L", "BP.L", 
+        "GSK.L", "DGE.L", "RIO.L", "AAL.L", "REL.L", 
+        "VOD.L", "BARC.L", "RR.L", "CPG.L", "LLOY.L"
+    ]
     save_path = 'data/raw'
     os.makedirs(save_path, exist_ok=True)
 
-    df = download_uk_data(tickers, "2022-01-01", "2025-12-31")
+    # ดึงข้อมูลใหม่
+    df = download_uk_data(tickers, "2020-01-01", "2026-01-01")
     
-    if df is not None:
+    if df is not None and not df.empty:
         full_path = os.path.join(save_path, 'uk_top_stocks.csv')
         df.to_csv(full_path)
-        print(f"💾 บันทึกไฟล์เรียบร้อย: {full_path}")
-        print(df.head())
+        print(f"✅ บันทึกหุ้น {len(df.columns)} ตัว ลงไฟล์เรียบร้อย!")
+    else:
+        print("❌ ดาวน์โหลดไม่สำเร็จ ตรวจสอบเน็ตหรือ Tickers")

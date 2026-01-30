@@ -43,25 +43,36 @@ def calculate_metrics(returns):
     return sharpe, max_dd, ann_return
 
 if __name__ == "__main__":
-    # ... (ส่วน Load Data เดิม) ...
+    # 1. Load Data
     prices = pd.read_csv('data/raw/uk_top_stocks.csv', index_col=0, parse_dates=True)
-    factors = pd.read_csv('data/processed/momentum_factor.csv', index_col=0, parse_dates=True).dropna()
-    prices = prices.loc[factors.index[0]:]
+    factors = pd.read_csv('data/processed/momentum_factor.csv', index_col=0, parse_dates=True).dropna(how='all')
     
-    strategy_ret = run_backtest(prices, factors)
+    # 2. Sync ข้อมูลด้วยการหาจุดร่วม (Common Index)
+    # เราจะเอาแค่วันที่ที่มีทั้งราคาและค่า Momentum เท่านั้น
+    common_dates = prices.index.intersection(factors.index)
     
-    # --- รันการคำนวณ Metrics ---
-    sharpe, max_dd, ann_ret = calculate_metrics(strategy_ret)
-    
-    print("\n" + "="*30)
-    print(" PERFORMANCE STATISTICS")
-    print("="*30)
-    print(f"Annualized Return: {ann_ret*100:.2f}%")
-    print(f"Sharpe Ratio:      {sharpe:.2f}")
-    print(f"Max Drawdown:      {max_dd*100:.2f}%")
-    print("="*30)
+    if len(common_dates) == 0:
+        print("❌ Error: ไม่พบวันที่ข้อมูลตรงกันเลย! กรุณาเช็กการรัน factors.py")
+    else:
+        prices = prices.loc[common_dates]
+        factors = factors.loc[common_dates]
+        
+        # 3. รัน Backtest
+        strategy_ret = run_backtest(prices, factors, top_n=5) # ปรับเป็น Top 5 เพราะหุ้นเยอะขึ้น
+        
+        # 4. คำนวณ Metrics และแสดงผล
+        sharpe, max_dd, ann_ret = calculate_metrics(strategy_ret)
+        
+        print("\n" + "="*30)
+        print(" PERFORMANCE STATISTICS (UK 30)")
+        print("="*30)
+        print(f"Annualized Return: {ann_ret*100:.2f}%")
+        print(f"Sharpe Ratio:      {sharpe:.2f}")
+        print(f"Max Drawdown:      {max_dd*100:.2f}%")
+        print("="*30)
 
-    # วาดกราฟเหมือนเดิม
-    cumulative_ret = (1 + strategy_ret).cumprod()
-    cumulative_ret.plot(figsize=(10,6), title='Momentum Strategy Performance', grid=True)
-    plt.show()
+        # 5. วาดกราฟ
+        cumulative_ret = (1 + strategy_ret).cumprod()
+        cumulative_ret.plot(figsize=(10,6), title='Momentum Strategy: UK Top 30', grid=True)
+        import matplotlib.pyplot as plt
+        plt.show()
