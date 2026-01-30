@@ -18,11 +18,11 @@ To evaluate the efficacy of **12-1 Momentum** and **Value** factors in predictin
 - **Rebalancing:** Monthly equal-weighted portfolio of the top-performing assets.
 
 ## 📈 Key Performance Results (2022 - 2025)
-| Metric | Performance |
+| Metric | Result (FTSE Top 15) |
 | :--- | :--- |
-| **Annualized Return** | 15.57% |
-| **Sharpe Ratio** | 0.94 |
-| **Max Drawdown** | -20.81% |
+| **Annualized Return** | 23.90% |
+| **Sharpe Ratio** | 1.15 |
+| **Max Drawdown** | -15.74% |
 
 ## 📂 Project Structure
 - `src/`: Core logic for data loading, factor calculation, and backtesting.
