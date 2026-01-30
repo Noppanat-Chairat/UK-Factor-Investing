@@ -24,6 +24,8 @@ To evaluate the efficacy of **12-1 Momentum** and **Value** factors in predictin
 | **Sharpe Ratio** | 1.15 |
 | **Max Drawdown** | -15.74% |
 
+![Momentum Strategy Results](backtest_result.png)
+
 ## 📂 Project Structure
 - `src/`: Core logic for data loading, factor calculation, and backtesting.
 - `data/`: Raw and processed market data.
